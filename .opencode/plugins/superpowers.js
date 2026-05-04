@@ -94,6 +94,7 @@ export const SuperpowersPlugin = async ({ client, directory }) => {
       }
 
       // Register agents from agents/*.md into config.agent
+      // Preserves existing config (opencode.json takes priority over plugin defaults)
       config.agent = config.agent || {};
       try {
         const files = fs.readdirSync(superpowersAgentsDir);
@@ -104,17 +105,26 @@ export const SuperpowersPlugin = async ({ client, directory }) => {
           const content = fs.readFileSync(fullPath, 'utf8');
           const { frontmatter, body } = extractFrontmatter(content);
 
+          const existing = config.agent[agentName] || {};
+          // Preserve user-set properties (like model from opencode.json)
+          // but don't set model from frontmatter — leave empty to inherit from parent
           config.agent[agentName] = {
-            description: frontmatter.description || '',
-            mode: frontmatter.mode || 'subagent',
-            ...(frontmatter.temperature !== undefined && { temperature: frontmatter.temperature }),
-            ...(frontmatter.tools && { tools: frontmatter.tools }),
-            ...(frontmatter.permission && { permission: frontmatter.permission }),
-            ...(frontmatter.model && { model: frontmatter.model }),
-            ...(frontmatter.hidden !== undefined && { hidden: frontmatter.hidden }),
-            ...(frontmatter.steps !== undefined && { steps: frontmatter.steps }),
-            ...(frontmatter.color && { color: frontmatter.color }),
-            prompt: body,
+            ...(existing.model !== undefined && { model: existing.model }),
+            description: existing.description || frontmatter.description || '',
+            mode: existing.mode || frontmatter.mode || 'subagent',
+            ...(existing.temperature !== undefined
+              ? { temperature: existing.temperature }
+              : frontmatter.temperature !== undefined && { temperature: frontmatter.temperature }),
+            ...(existing.tools || (frontmatter.tools && { tools: frontmatter.tools })),
+            ...(existing.permission || (frontmatter.permission && { permission: frontmatter.permission })),
+            ...(existing.hidden !== undefined
+              ? { hidden: existing.hidden }
+              : frontmatter.hidden !== undefined && { hidden: frontmatter.hidden }),
+            ...(existing.steps !== undefined
+              ? { steps: existing.steps }
+              : frontmatter.steps !== undefined && { steps: frontmatter.steps }),
+            ...(existing.color || (frontmatter.color && { color: frontmatter.color })),
+            prompt: existing.prompt || body,
           };
         }
       } catch (e) {

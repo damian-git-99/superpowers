@@ -75,6 +75,26 @@ Models inherit from the parent agent by default. To assign specific models per a
 
 **The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
 
+## OpenSpec Integration
+
+This fork supports an alternative workflow using [OpenSpec](https://openspec.dev) for spec/plan management. Requires [OpenSpec CLI](https://openspec.dev) installed and initialized (`openspec init`) in your project.
+
+**Flow:**
+
+```
+1. brainstorming-openspec     → design approved
+2. /opsx-ff <change-name>     → creates proposal, specs, design, tasks
+3. subagent-driven-dev-openspec → implements tasks via subagents
+4. /opsx-archive <change-name> → archives completed change
+```
+
+OpenSpec CLI generates the `/opsx-*` commands automatically. After install, run `openspec init` in your project to activate them.
+
+| Skill | Replaces | Purpose |
+|-------|----------|---------|
+| `brainstorming-openspec` | — | Design exploration, then hands off to OpenSpec |
+| `subagent-driven-development-openspec` | `/opsx-apply` | Implements tasks from `openspec/changes/<name>/tasks.md` |
+
 ## What's Inside
 
 ### Skills Library
@@ -96,6 +116,8 @@ Models inherit from the parent agent by default. To assign specific models per a
 - **using-git-worktrees** - Parallel development branches
 - **finishing-a-development-branch** - Merge/PR decision workflow
 - **subagent-driven-development** - Fast iteration with two-stage review
+- **brainstorming-openspec** - Design exploration with OpenSpec handoff
+- **subagent-driven-development-openspec** - Implement OpenSpec changes
 
 **Meta**
 - **writing-skills** - Create new skills following best practices

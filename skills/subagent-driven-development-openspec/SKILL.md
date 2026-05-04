@@ -90,7 +90,8 @@ digraph process {
     "Dispatch code quality reviewer subagent" -> "Code quality approves?";
     "Code quality approves?" -> "Implementer fixes quality issues" [label="no"];
     "Implementer fixes quality issues" -> "Dispatch code quality reviewer subagent" [label="re-review"];
-    "Code quality approves?" -> "Mark task group complete" [label="yes"];
+    "Code quality approves?" -> "Update tasks.md with checkmarks" [label="yes"];
+    "Update tasks.md with checkmarks" -> "Mark task group complete";
     "Mark task group complete" -> "More task groups?";
     "More task groups?" -> "Read task group from tasks.md" [label="yes"];
     "More task groups?" -> "Dispatch final code reviewer" [label="no"];
@@ -127,6 +128,15 @@ Each task group gets dispatched to an implementer subagent with:
 After each task group, two-stage review:
 1. **Spec compliance** — compare against delta + canonical specs
 2. **Code quality** — using code-reviewer agent
+
+After both reviews pass, **update tasks.md** to mark subtasks as complete:
+
+```markdown
+- [x] 1.1 Task description
+- [x] 1.2 Another task
+```
+
+Edit the file directly (`openspec/changes/<name>/tasks.md`). This ensures `/opsx-archive` sees the correct completion status.
 
 ## Model Selection
 

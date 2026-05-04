@@ -4,116 +4,57 @@ Superpowers is a complete software development methodology for your coding agent
 
 ## How it works
 
-It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do. 
+It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do.
 
-Once it's teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest. 
+Once it's teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest.
 
-After you've signed off on the design, your agent puts together an implementation plan that's clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasizes true red/green TDD, YAGNI (You Aren't Gonna Need It), and DRY. 
+After you've signed off on the design, your agent puts together an implementation plan. You can choose between **Lite** (high-level tasks, ~200-500 lines) or **Complete** (full code in every step, ~1000-2000+ lines).
 
-Next up, once you say "go", it launches a *subagent-driven-development* process, having agents work through each engineering task, inspecting and reviewing their work, and continuing forward. It's not uncommon for Claude to be able to work autonomously for a couple hours at a time without deviating from the plan you put together.
+Next up, once you say "go", it launches a *subagent-driven-development* process, dispatching specialized subagents per task (implementer, spec-reviewer, code-reviewer), each with their own context and model. It's not uncommon for agents to work autonomously for extended periods without deviating from the plan.
 
-There's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has Superpowers.
+## Installation (OpenCode)
 
+Add to your `opencode.json` (global or project-level):
 
-## Sponsorship
+```json
+{
+  "plugin": ["superpowers@git+https://github.com/damian-git-99/superpowers.git"]
+}
+```
 
-If Superpowers has helped you do stuff that makes money and you are so inclined, I'd greatly appreciate it if you'd consider [sponsoring my opensource work](https://github.com/sponsors/obra).
+Restart OpenCode. That's it — the plugin auto-installs and registers all skills and agents.
 
-Thanks! 
-
-- Jesse
-
-
-## Installation
-
-**Note:** Installation differs by platform. 
-
-### Claude Code Official Marketplace
-
-Superpowers is available via the [official Claude plugin marketplace](https://claude.com/plugins/superpowers)
-
-Install the plugin from Anthropic's official marketplace:
-
+To update (force refresh):
 ```bash
-/plugin install superpowers@claude-plugins-official
+rm -rf ~/.cache/opencode/packages/superpowers@git+https:/github.com/damian-git-99/superpowers.git
 ```
+Then restart OpenCode.
 
-### Claude Code (Superpowers Marketplace)
+## Agents
 
-The Superpowers marketplace provides Superpowers and some other related plugins for Claude Code.
+This fork adds 5 dedicated subagents, each configurable with its own model:
 
-In Claude Code, register the marketplace first:
+| Agent | Role | Default model |
+|-------|------|---------------|
+| `code-reviewer` | Reviews code quality, architecture, plan alignment | Inherits from parent |
+| `implementer` | Implements coding tasks from plans | Inherits from parent |
+| `spec-reviewer` | Verifies implementation matches specification | Inherits from parent |
+| `spec-document-reviewer` | Reviews spec documents for clarity and completeness | Inherits from parent |
+| `plan-document-reviewer` | Reviews implementation plans for buildability | Inherits from parent |
 
-```bash
-/plugin marketplace add obra/superpowers-marketplace
-```
+Models inherit from the parent agent by default. To assign specific models per agent, set them in your `opencode.json`:
 
-Then install the plugin from this marketplace:
-
-```bash
-/plugin install superpowers@superpowers-marketplace
-```
-
-### OpenAI Codex CLI
-
-- Open plugin search interface
-
-```bash
-/plugins
-```
-
-Search for Superpowers
-
-```bash
-superpowers
-```
-
-Select `Install Plugin`
-
-### OpenAI Codex App
-
-- In the Codex app, click on Plugins in the sidebar.
-- You should see `Superpowers` in the Coding section. 
-- Click the `+` next to Superpowers and follow the prompts.
-
-
-### Cursor (via Plugin Marketplace)
-
-In Cursor Agent chat, install from marketplace:
-
-```text
-/add-plugin superpowers
-```
-
-or search for "superpowers" in the plugin marketplace.
-
-### OpenCode
-
-Tell OpenCode:
-
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
-```
-
-**Detailed docs:** [docs/README.opencode.md](docs/README.opencode.md)
-
-### GitHub Copilot CLI
-
-```bash
-copilot plugin marketplace add obra/superpowers-marketplace
-copilot plugin install superpowers@superpowers-marketplace
-```
-
-### Gemini CLI
-
-```bash
-gemini extensions install https://github.com/obra/superpowers
-```
-
-To update:
-
-```bash
-gemini extensions update superpowers
+```json
+{
+  "agent": {
+    "code-reviewer": {
+      "model": "anthropic/claude-sonnet-4-20250514"
+    },
+    "implementer": {
+      "model": "anthropic/claude-haiku-4-20250514"
+    }
+  }
+}
 ```
 
 ## The Basic Workflow
@@ -122,7 +63,7 @@ gemini extensions update superpowers
 
 2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
 
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
+3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks. Ask you to choose Lite or Complete format.
 
 4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
 
@@ -139,26 +80,36 @@ gemini extensions update superpowers
 ### Skills Library
 
 **Testing**
-- **test-driven-development** - RED-GREEN-REFACTOR cycle (includes testing anti-patterns reference)
+- **test-driven-development** - RED-GREEN-REFACTOR cycle
 
 **Debugging**
-- **systematic-debugging** - 4-phase root cause process (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
+- **systematic-debugging** - 4-phase root cause process
 - **verification-before-completion** - Ensure it's actually fixed
 
-**Collaboration** 
+**Collaboration**
 - **brainstorming** - Socratic design refinement
-- **writing-plans** - Detailed implementation plans
+- **writing-plans** - Detailed implementation plans (Lite or Complete)
 - **executing-plans** - Batch execution with checkpoints
 - **dispatching-parallel-agents** - Concurrent subagent workflows
 - **requesting-code-review** - Pre-review checklist
 - **receiving-code-review** - Responding to feedback
 - **using-git-worktrees** - Parallel development branches
 - **finishing-a-development-branch** - Merge/PR decision workflow
-- **subagent-driven-development** - Fast iteration with two-stage review (spec compliance, then code quality)
+- **subagent-driven-development** - Fast iteration with two-stage review
 
 **Meta**
-- **writing-skills** - Create new skills following best practices (includes testing methodology)
+- **writing-skills** - Create new skills following best practices
 - **using-superpowers** - Introduction to the skills system
+
+### Agents Library
+
+| File | Role |
+|------|------|
+| `agents/code-reviewer.md` | Senior code reviewer (read-only + git diff) |
+| `agents/implementer.md` | Implements tasks from plans (full tools) |
+| `agents/spec-reviewer.md` | Spec compliance checker (read-only + git diff) |
+| `agents/spec-document-reviewer.md` | Spec document reviewer (read-only) |
+| `agents/plan-document-reviewer.md` | Plan document reviewer (read-only) |
 
 ## Philosophy
 
@@ -167,32 +118,13 @@ gemini extensions update superpowers
 - **Complexity reduction** - Simplicity as primary goal
 - **Evidence over claims** - Verify before declaring success
 
-Read [the original release announcement](https://blog.fsck.com/2025/10/09/superpowers/).
-
 ## Contributing
 
-The general contribution process for Superpowers is below. Keep in mind that we don't generally accept contributions of new skills and that any updates to skills must work across all of the coding agents we support.
-
 1. Fork the repository
-2. Switch to the 'dev' branch
-3. Create a branch for your work
-4. Follow the `writing-skills` skill for creating and testing new and modified skills
-5. Submit a PR, being sure to fill in the pull request template.
-
-See `skills/writing-skills/SKILL.md` for the complete guide.
-
-## Updating
-
-Superpowers updates are somewhat coding-agent dependent, but are often automatic.
+2. Create a branch for your work
+3. Follow the `writing-skills` skill for creating and testing new and modified skills
+4. Submit a PR
 
 ## License
 
 MIT License - see LICENSE file for details
-
-## Community
-
-Superpowers is built by [Jesse Vincent](https://blog.fsck.com) and the rest of the folks at [Prime Radiant](https://primeradiant.com).
-
-- **Discord**: [Join us](https://discord.gg/35wsABTejz) for community support, questions, and sharing what you're building with Superpowers
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Release announcements**: [Sign up](https://primeradiant.com/superpowers/) to get notified about new versions

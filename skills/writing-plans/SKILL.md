@@ -42,6 +42,35 @@ This structure informs the task decomposition. Each task should produce self-con
 - "Run the tests and make sure they pass" - step
 - "Commit" - step
 
+## Plan Format Choice (Ask User First)
+
+Before writing the plan, ask the user which format they prefer:
+
+> "Two plan formats available:
+> - **Lite** (recommended): Tasks + file paths + high-level steps. No code copied. ~200-500 lines.
+> - **Complete**: Full code in every step. Good for complex features. ~1000-2000+ lines.
+> 
+> Which do you prefer?"
+
+**Lite format** (recommended):
+````markdown
+### Task N: [Component Name]
+
+**Files:**
+- Create: `exact/path/to/file.py`
+- Modify: `exact/path/to/existing.py:123-145`
+- Test: `tests/exact/path/to/test.py`
+
+- [ ] **Step 1: Write the failing test** - Write minimal test
+- [ ] **Step 2: Run test to verify it fails** - Expected: FAIL
+- [ ] **Step 3: Write implementation** - Write minimal code to pass test
+- [ ] **Step 4: Run test to verify it passes** - Expected: PASS
+- [ ] **Step 5: Commit**
+````
+
+**Complete format** (current):
+- Same structure as Lite but with full code blocks in each step
+
 ## Plan Document Header
 
 **Every plan MUST start with this header:**
@@ -57,11 +86,30 @@ This structure informs the task decomposition. Each task should produce self-con
 
 **Tech Stack:** [Key technologies/libraries]
 
+**Format:** [Lite | Complete]
+
 ---
 ```
 
 ## Task Structure
 
+**For Lite format:**
+````markdown
+### Task N: [Component Name]
+
+**Files:**
+- Create: `exact/path/to/file.py`
+- Modify: `exact/path/to/existing.py:123-145`
+- Test: `tests/exact/path/to/test.py`
+
+- [ ] **Step 1: Write the failing test** - Write minimal test
+- [ ] **Step 2: Run test to verify it fails** - Run: pytest tests/path/test.py | Expected: FAIL
+- [ ] **Step 3: Write implementation** - Write minimal code to make test pass
+- [ ] **Step 4: Run test to verify it passes** - Run: pytest tests/path/test.py | Expected: PASS
+- [ ] **Step 5: Commit**
+````
+
+**For Complete format:**
 ````markdown
 ### Task N: [Component Name]
 
@@ -105,17 +153,17 @@ git commit -m "feat: add specific feature"
 
 ## No Placeholders
 
-Every step must contain the actual content an engineer needs. These are **plan failures** — never write them:
+Every step must contain the content an engineer needs. These are **plan failures** — never write them:
 - "TBD", "TODO", "implement later", "fill in details"
 - "Add appropriate error handling" / "add validation" / "handle edge cases"
-- "Write tests for the above" (without actual test code)
+- "Write tests for the above" (without actual test code for Complete format)
 - "Similar to Task N" (repeat the code — the engineer may be reading tasks out of order)
-- Steps that describe what to do without showing how (code blocks required for code steps)
+- Steps that describe what to do without showing how (code blocks required for Complete format)
 - References to types, functions, or methods not defined in any task
 
 ## Remember
 - Exact file paths always
-- Complete code in every step — if a step changes code, show the code
+- Complete code in every step (Complete format) OR concise steps with clear intent (Lite format)
 - Exact commands with expected output
 - DRY, YAGNI, TDD, frequent commits
 

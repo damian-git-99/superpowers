@@ -131,6 +131,27 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
+## PR Scope Check (Optional but Recommended for Large Features)
+
+After the self-review, estimate the plan scope:
+
+**Count:**
+- How many tasks?
+- How many files modified (from File Structure section)?
+- Rough estimate of lines to add/change per task
+
+**If the plan is large (e.g., 5+ tasks or ~1000+ lines estimated), warn the user:**
+
+> ⚠️ **Plan Scope Warning:** This plan has X tasks and modifies ~Y files with an estimated Z lines of changes.
+> 
+> **Consider splitting into multiple PRs for easier review:**
+> 1. First PR: Tasks 1 through N (smaller, faster to review)
+> 2. Second PR: Tasks N+1 through end (after first PR merges from main)
+> 
+> This keeps each PR reviewable (~300-500 lines) and avoids 3000-line PRs that no one wants to review.
+
+**This is advisory — don't enforce.** The user decides whether to split. Just make the recommendation clearly so they can choose.
+
 ## Execution Handoff
 
 After saving the plan, offer execution choice:

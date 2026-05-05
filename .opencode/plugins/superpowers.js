@@ -105,9 +105,6 @@ export const SuperpowersPlugin = async ({ client, directory }) => {
           const content = fs.readFileSync(fullPath, 'utf8');
           const { frontmatter, body } = extractFrontmatter(content);
 
-          // Skip primary agents — they're meant for manual install to ~/.config/opencode/agents/
-          if (frontmatter.mode === 'primary') continue;
-
           const existing = config.agent[agentName] || {};
           // Preserve user-set properties (like model from opencode.json)
           // but don't set model from frontmatter — leave empty to inherit from parent

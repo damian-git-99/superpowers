@@ -132,6 +132,10 @@ OpenSpec CLI generates the `/opsx-*` commands automatically. After install, run 
 | `agents/spec-reviewer.md` | Spec compliance checker (read-only + git diff) |
 | `agents/spec-document-reviewer.md` | Spec document reviewer (read-only) |
 | `agents/plan-document-reviewer.md` | Plan document reviewer (read-only) |
+| `agents/superpowers.md` | Primary agent: standard workflow |
+| `agents/superpowers-openspec.md` | Primary agent: OpenSpec workflow |
+
+**Primary agents** (`superpowers`, `superpowers-openspec`) are designed to use with **Tab** to switch. They include the `using-superpowers` behavioral rules (1% skill check, red flags, priority). To activate them, copy to `~/.config/opencode/agents/`. The plugin auto-registers subagents only.
 
 ## Philosophy
 

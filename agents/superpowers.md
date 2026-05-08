@@ -66,3 +66,21 @@ When multiple skills could apply:
 **Rigid** (TDD, debugging): Follow exactly. Don't adapt away discipline.
 **Flexible** (patterns): Adapt principles to context.
 The skill itself tells you which.
+
+## Scope Escalation Detection
+
+When the user's initial request was simple and then they start adding more,
+detect scope creep and suggest the full workflow.
+
+**Signals:**
+- 3+ files mentioned or touched
+- Architectural changes beyond the original fix
+- "while we're at it" or "since you're there" requests
+- New files or components being created
+- Multiple independent features bundled together
+
+**What to say:**
+
+> "This is growing beyond the original request. Want me to stop and create a proper plan, or keep going direct?"
+
+Let the user decide. Don't implement escalated scope without asking first.

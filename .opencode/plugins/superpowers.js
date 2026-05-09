@@ -94,7 +94,8 @@ export const SuperpowersPlugin = async ({ client, directory }) => {
       }
 
       // Register agents from agents/*.md into config.agent
-      // Preserves existing config (opencode.json takes priority over plugin defaults)
+      // Only sets schema-safe properties to avoid validation errors.
+      // Tool/permission restrictions and models should be configured in opencode.json.
       config.agent = config.agent || {};
       try {
         const files = fs.readdirSync(superpowersAgentsDir);
@@ -106,8 +107,6 @@ export const SuperpowersPlugin = async ({ client, directory }) => {
           const { frontmatter, body } = extractFrontmatter(content);
 
           const existing = config.agent[agentName] || {};
-          // Preserve user-set properties (like model from opencode.json)
-          // but don't set model from frontmatter — leave empty to inherit from parent
           config.agent[agentName] = {
             ...(existing.model !== undefined && { model: existing.model }),
             description: existing.description || frontmatter.description || '',
@@ -115,8 +114,6 @@ export const SuperpowersPlugin = async ({ client, directory }) => {
             ...(existing.temperature !== undefined
               ? { temperature: existing.temperature }
               : frontmatter.temperature !== undefined && { temperature: frontmatter.temperature }),
-            ...(existing.tools || (frontmatter.tools && { tools: frontmatter.tools })),
-            ...(existing.permission || (frontmatter.permission && { permission: frontmatter.permission })),
             ...(existing.hidden !== undefined
               ? { hidden: existing.hidden }
               : frontmatter.hidden !== undefined && { hidden: frontmatter.hidden }),

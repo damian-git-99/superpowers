@@ -91,23 +91,23 @@ When multiple skills could apply:
 Superpowers uses subagent-driven-development for implementation. In Pi, dispatch subagents using the `subagent` tool:
 
 ```typescript
-// Implementer → worker
+// Implementer → superpowers.implementer
 subagent({
-  agent: "worker",
+  agent: "superpowers.implementer",
   task: "Implement Task N...",
   context: "fresh"
 })
 
-// Spec reviewer → scout (cheap, verify only)
+// Spec reviewer → superpowers.spec-reviewer
 subagent({
-  agent: "scout",
+  agent: "superpowers.spec-reviewer",
   task: "Verify spec compliance by reading the implementation...",
   context: "fresh"
 })
 
-// Code reviewer → reviewer
+// Code reviewer → superpowers.code-reviewer
 subagent({
-  agent: "reviewer",
+  agent: "superpowers.code-reviewer",
   task: "Review code quality...",
   context: "fresh"
 })

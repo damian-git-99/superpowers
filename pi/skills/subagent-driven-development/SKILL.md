@@ -127,7 +127,7 @@ Read `implementer-prompt.md`, fill in the task description, context, and placeho
 
 ```typescript
 subagent({
-  agent: "worker",
+  agent: "superpowers.implementer",
   task: `You are implementing Task N: [task name]
 
 ## Task Description
@@ -157,7 +157,7 @@ Use `scout` (fast/cheap) for spec compliance — just read the code and compare:
 
 ```typescript
 subagent({
-  agent: "scout",
+  agent: "superpowers.spec-reviewer",
   task: `You are reviewing whether an implementation matches its specification.
 
 ## What Was Requested
@@ -177,7 +177,7 @@ subagent({
 
 ```typescript
 subagent({
-  agent: "reviewer",
+  agent: "superpowers.code-reviewer",
   task: `Review the implementation for code quality concerns.
 
 What was implemented: [from implementer's report]
@@ -205,7 +205,7 @@ Task 1: Hook installation script
 [Dispatch implementer subagent]
 
 subagent({
-  agent: "worker",
+  agent: "superpowers.implementer",
   task: "You are implementing Task 1: Hook installation script...",
   context: "fresh"
 })
@@ -224,7 +224,7 @@ Implementer: "Got it. Implementing now..."
 [Dispatch spec reviewer]
 
 subagent({
-  agent: "scout",
+  agent: "superpowers.spec-reviewer",
   task: "You are reviewing whether an implementation matches its specification...",
   context: "fresh"
 })
@@ -234,7 +234,7 @@ Spec reviewer: ✅ Spec compliant - all requirements met, nothing extra
 [Dispatch code quality reviewer]
 
 subagent({
-  agent: "reviewer",
+  agent: "superpowers.code-reviewer",
   task: "Review code quality. What was implemented: ...",
   context: "fresh"
 })

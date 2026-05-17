@@ -26,14 +26,14 @@ When a skill says to dispatch a named agent, use the `subagent` tool with pi-sub
 ```typescript
 // Single agent
 subagent({
-  agent: "reviewer",
+  agent: "superpowers.code-reviewer",
   task: "Review the implementation for...",
   context: "fresh"
 })
 
 // With inline model override
 subagent({
-  agent: "worker",
+  agent: "superpowers.implementer",
   task: "Implement Task N...",
   model: "anthropic/claude-sonnet-4",
   context: "fork"
@@ -42,8 +42,8 @@ subagent({
 // Parallel agents
 subagent({
   tasks: [
-    { agent: "scout", task: "Check spec compliance...", context: "fresh" },
-    { agent: "reviewer", task: "Review code quality...", context: "fresh" }
+    { agent: "superpowers.spec-reviewer", task: "Check spec compliance...", context: "fresh" },
+    { agent: "superpowers.code-reviewer", task: "Review code quality...", context: "fresh" }
   ],
   concurrency: 2
 })
@@ -51,25 +51,25 @@ subagent({
 // Sequential chain
 subagent({
   chain: [
-    { agent: "worker", task: "Implement...", context: "fresh" },
-    { agent: "scout", task: "Review spec compliance {previous}", context: "fresh" },
-    { agent: "reviewer", task: "Review code quality {previous}", context: "fresh" }
+    { agent: "superpowers.implementer", task: "Implement...", context: "fresh" },
+    { agent: "superpowers.spec-reviewer", task: "Review spec compliance {previous}", context: "fresh" },
+    { agent: "superpowers.code-reviewer", task: "Review code quality {previous}", context: "fresh" }
   ]
 })
 ```
 
 ## Agent mapping
 
-| Skill references | Pi builtin agent | Cost |
-|-----------------|-----------------|------|
-| `implementer` | `worker` | standard |
-| `code-reviewer` (quality) | `reviewer` | 💪 powerful |
-| `spec-reviewer` (compliance) | `scout` | ⚡ cheap |
-| `spec-document-reviewer` | `scout` | ⚡ cheap |
-| `plan-document-reviewer` | `reviewer` | 💪 powerful |
-| `Explore` / `scout` | `scout` | ⚡ cheap |
-| `planner` | `planner` | 💪 powerful |
-| `oracle` | `oracle` | 💪 powerful |
+| Skill references | Pi subagent | Cost |
+|-----------------|-------------|------|
+| `implementer` | `superpowers.implementer` | standard |
+| `code-reviewer` (quality) | `superpowers.code-reviewer` | 💪 powerful |
+| `spec-reviewer` (compliance) | `superpowers.spec-reviewer` | ⚡ cheap |
+| `spec-document-reviewer` | `superpowers.spec-document-reviewer` | ⚡ cheap |
+| `plan-document-reviewer` | `superpowers.plan-document-reviewer` | 💪 powerful |
+| `Explore` / `scout` | `scout` (builtin) | ⚡ cheap |
+| `planner` | `planner` (builtin) | 💪 powerful |
+| `oracle` | `oracle` (builtin) | 💪 powerful |
 
 ## Prompt templates
 
@@ -81,7 +81,7 @@ const prompt = await read("skills/subagent-driven-development/implementer-prompt
 
 // Use it as the task with a builtin agent
 subagent({
-  agent: "worker",
+  agent: "superpowers.implementer",
   task: prompt + "\n\n[fill in template placeholders]",
   context: "fresh"
 })

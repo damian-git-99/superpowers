@@ -98,10 +98,10 @@ subagent({
   context: "fresh"
 })
 
-// Spec reviewer → reviewer
+// Spec reviewer → scout (cheap, verify only)
 subagent({
-  agent: "reviewer",
-  task: "Verify spec compliance...",
+  agent: "scout",
+  task: "Verify spec compliance by reading the implementation...",
   context: "fresh"
 })
 

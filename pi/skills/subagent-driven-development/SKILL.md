@@ -153,9 +153,11 @@ Once you're clear on requirements:
 
 ### Spec reviewer dispatch
 
+Use `scout` (fast/cheap) for spec compliance — just read the code and compare:
+
 ```typescript
 subagent({
-  agent: "reviewer",
+  agent: "scout",
   task: `You are reviewing whether an implementation matches its specification.
 
 ## What Was Requested
@@ -222,7 +224,7 @@ Implementer: "Got it. Implementing now..."
 [Dispatch spec reviewer]
 
 subagent({
-  agent: "reviewer",
+  agent: "scout",
   task: "You are reviewing whether an implementation matches its specification...",
   context: "fresh"
 })

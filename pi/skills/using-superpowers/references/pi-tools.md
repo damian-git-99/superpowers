@@ -42,7 +42,7 @@ subagent({
 // Parallel agents
 subagent({
   tasks: [
-    { agent: "reviewer", task: "Check spec compliance...", context: "fresh" },
+    { agent: "scout", task: "Check spec compliance...", context: "fresh" },
     { agent: "reviewer", task: "Review code quality...", context: "fresh" }
   ],
   concurrency: 2
@@ -52,24 +52,24 @@ subagent({
 subagent({
   chain: [
     { agent: "worker", task: "Implement...", context: "fresh" },
-    { agent: "reviewer", task: "Review {previous}", context: "fresh" },
-    { agent: "reviewer", task: "Review {previous}", context: "fresh" }
+    { agent: "scout", task: "Review spec compliance {previous}", context: "fresh" },
+    { agent: "reviewer", task: "Review code quality {previous}", context: "fresh" }
   ]
 })
 ```
 
 ## Agent mapping
 
-| Skill references | Pi builtin agent |
-|-----------------|-----------------|
-| `implementer` | `worker` |
-| `code-reviewer` | `reviewer` |
-| `spec-reviewer` | `reviewer` |
-| `spec-document-reviewer` | `reviewer` |
-| `plan-document-reviewer` | `reviewer` |
-| `Explore` / `scout` | `scout` |
-| `planner` | `planner` |
-| `oracle` | `oracle` |
+| Skill references | Pi builtin agent | Cost |
+|-----------------|-----------------|------|
+| `implementer` | `worker` | standard |
+| `code-reviewer` (quality) | `reviewer` | 💪 powerful |
+| `spec-reviewer` (compliance) | `scout` | ⚡ cheap |
+| `spec-document-reviewer` | `scout` | ⚡ cheap |
+| `plan-document-reviewer` | `reviewer` | 💪 powerful |
+| `Explore` / `scout` | `scout` | ⚡ cheap |
+| `planner` | `planner` | 💪 powerful |
+| `oracle` | `oracle` | 💪 powerful |
 
 ## Prompt templates
 

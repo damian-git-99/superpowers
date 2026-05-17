@@ -76,16 +76,31 @@ In `~/.pi/agent/settings.json`:
         "model": "opencode-go/deepseek-v4-flash",
         "thinking": "high"
       },
-      "reviewer": {
-        "model": "opencode-go/qwen3.6-plus"
-      },
       "scout": {
-        "model": "opencode-go/deepseek-v4-flash"
+        "model": "opencode-go/deepseek-v4-flash",
+        "thinking": "low"
+      },
+      "reviewer": {
+        "model": "opencode-go/qwen3.6-plus",
+        "thinking": "high"
+      },
+      "planner": {
+        "model": "opencode-go/deepseek-v4-flash",
+        "thinking": "high"
+      },
+      "oracle": {
+        "model": "opencode-go/qwen3.6-plus",
+        "thinking": "high"
       }
     }
   }
 }
 ```
+
+**Logic:**
+- `scout` → cheap model, low thinking (spec compliance, exploration)
+- `reviewer` → powerful model, high thinking (code review, plan review)
+- `oracle` → powerful model (second opinions, architecture)
 
 ## Troubleshooting
 

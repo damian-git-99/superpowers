@@ -1,0 +1,11 @@
+{
+  "name": "superpowers-pi",
+  "version": "5.0.7",
+  "description": "Superpowers for Pi: brainstorming, TDD, subagent-driven-development, and collaboration workflows",
+  "keywords": ["pi-package"],
+  "license": "MIT",
+  "pi": {
+    "skills": ["./skills"],
+    "extensions": ["./extensions/register-agents.ts"]
+  }
+}

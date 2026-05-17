@@ -14,48 +14,44 @@ echo "Test 1: package.json..."
 pkg="$PI_PKG/package.json"
 [ -f "$pkg" ] && echo "  [PASS] Exists" || { echo "  [FAIL] Missing"; exit 1; }
 grep -q '"pi"' "$pkg" && echo "  [PASS] Has pi manifest" || { echo "  [FAIL] No pi key"; exit 1; }
-grep -q '"skills"' "$pkg" && echo "  [PASS] Has skills entry" || { echo "  [FAIL] No skills"; exit 1; }
-grep -q '"extensions"' "$pkg" && echo "  [PASS] Has extensions entry" || { echo "  [FAIL] No extensions"; exit 1; }
+grep -q '"skills"' "$pkg" && echo "  [PASS] Has skills" || { echo "  [FAIL] No skills"; exit 1; }
+grep -q '"extensions"' "$pkg" && echo "  [WARN] Has extensions (not needed with builtin agents)" || echo "  [INFO] No extensions (builtin agents)"
 
-# 2. Extension file exists
-echo "Test 2: Extension..."
-ext="$PI_PKG/extensions/register-agents.ts"
-[ -f "$ext" ] && echo "  [PASS] register-agents.ts" || { echo "  [FAIL] Missing"; exit 1; }
+# 2. Agents directory should NOT exist (using pi-subagents builtins)
+echo "Test 2: Agents..."
+if [ ! -d "$PI_PKG/agents" ]; then
+    echo "  [PASS] No custom agents dir (using pi-subagents builtins)"
+else
+    echo "  [WARN] agents/ dir still present"
+fi
 
-# 3. Agent files exist
-echo "Test 3: Agents..."
-expected_agents=("code-reviewer" "implementer" "spec-reviewer" "spec-document-reviewer" "plan-document-reviewer")
-for a in "${expected_agents[@]}"; do
-    [ -f "$PI_PKG/agents/$a.md" ] && echo "  [PASS] $a" || { echo "  [FAIL] $a missing"; exit 1; }
-done
+# 3. Extension file should NOT exist
+echo "Test 3: Extension..."
+if [ ! -f "$PI_PKG/extensions/register-agents.ts" ]; then
+    echo "  [PASS] No extension file (not needed)"
+else
+    echo "  [WARN] Extension still present"
+fi
 
-# 4. All agent frontmatter is valid (name + description)
-echo "Test 4: Agent frontmatter..."
-for f in "$PI_PKG/agents/"*.md; do
-    name=$(basename "$f" .md)
-    grep -q "^name: $name" "$f" && echo "  [PASS] $name: name" || { echo "  [FAIL] $name: missing name"; exit 1; }
-    grep -q "^description:" "$f" && echo "  [PASS] $name: description" || { echo "  [FAIL] $name: missing description"; exit 1; }
-done
-
-# 5. Skills exist (18 total)
-echo "Test 5: Skills..."
+# 4. Skills exist (18+ total)
+echo "Test 4: Skills..."
 skill_count=$(find -L "$PI_PKG/skills" -name "SKILL.md" | wc -l)
-[ "$skill_count" -ge 16 ] && echo "  [PASS] $skill_count skills found (expected >=16)" || { echo "  [FAIL] Expected >=16, got $skill_count (try: find -L)"; exit 1; }
+[ "$skill_count" -ge 16 ] && echo "  [PASS] $skill_count skills found (expected >=16)" || { echo "  [FAIL] Expected >=16, got $skill_count"; exit 1; }
 
-# 6. Critical pi-specific skills exist
-echo "Test 6: Critical pi skills..."
+# 5. Critical pi-specific skills exist
+echo "Test 5: Critical pi skills..."
 for skill in superpowers superpowers-openspec using-superpowers brainstorming brainstorming-openspec \
              subagent-driven-development dispatching-parallel-agents; do
     [ -f "$PI_PKG/skills/$skill/SKILL.md" ] && echo "  [PASS] $skill" || { echo "  [FAIL] $skill missing"; exit 1; }
 done
 
-# 7. Pi-specific skill references exist
-echo "Test 7: Pi references..."
+# 6. Pi-specific skill references exist
+echo "Test 6: Pi references..."
 [ -f "$PI_PKG/skills/using-superpowers/references/pi-tools.md" ] && \
     echo "  [PASS] pi-tools.md" || { echo "  [FAIL] pi-tools.md missing"; exit 1; }
 
-# 8. Symlinks resolve correctly
-echo "Test 8: Symlinks..."
+# 7. Symlinks resolve correctly
+echo "Test 7: Symlinks..."
 for f in "$PI_PKG/skills/"*; do
     if [ -L "$f" ]; then
         target=$(readlink "$f")

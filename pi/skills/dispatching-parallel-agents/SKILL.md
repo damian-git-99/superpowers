@@ -70,9 +70,9 @@ In Pi, dispatch parallel subagents using the `subagent` tool with `tasks`:
 ```typescript
 subagent({
   tasks: [
-    { agent: "superpowers.implementer", task: "Fix agent-tool-abort.test.ts failures", context: "fresh" },
-    { agent: "superpowers.implementer", task: "Fix batch-completion-behavior.test.ts failures", context: "fresh" },
-    { agent: "superpowers.implementer", task: "Fix tool-approval-race-conditions.test.ts failures", context: "fresh" }
+    { agent: "worker", task: "Fix agent-tool-abort.test.ts failures", context: "fresh" },
+    { agent: "worker", task: "Fix batch-completion-behavior.test.ts failures", context: "fresh" },
+    { agent: "worker", task: "Fix tool-approval-race-conditions.test.ts failures", context: "fresh" }
   ],
   concurrency: 3
 })

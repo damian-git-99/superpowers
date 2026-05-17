@@ -21,19 +21,19 @@ Skills use Claude Code tool names. When you encounter these in a skill, use your
 
 ## Subagent dispatch in Pi
 
-When a skill says to dispatch a named agent (e.g., `code-reviewer`, `implementer`, `spec-reviewer`), use the `subagent` tool:
+When a skill says to dispatch a named agent, use the `subagent` tool with pi-subagents builtin agents:
 
 ```typescript
 // Single agent
 subagent({
-  agent: "superpowers.code-reviewer",
+  agent: "reviewer",
   task: "Review the implementation for...",
   context: "fresh"
 })
 
-// With inline config override
+// With inline model override
 subagent({
-  agent: "superpowers.implementer",
+  agent: "worker",
   task: "Implement Task N...",
   model: "anthropic/claude-sonnet-4",
   context: "fork"
@@ -42,8 +42,8 @@ subagent({
 // Parallel agents
 subagent({
   tasks: [
-    { agent: "superpowers.spec-reviewer", task: "Check spec compliance...", context: "fresh" },
-    { agent: "superpowers.code-reviewer", task: "Review code quality...", context: "fresh" }
+    { agent: "reviewer", task: "Check spec compliance...", context: "fresh" },
+    { agent: "reviewer", task: "Review code quality...", context: "fresh" }
   ],
   concurrency: 2
 })
@@ -51,24 +51,25 @@ subagent({
 // Sequential chain
 subagent({
   chain: [
-    { agent: "superpowers.implementer", task: "Implement...", context: "fresh" },
-    { agent: "superpowers.spec-reviewer", task: "Review {previous}", context: "fresh" },
-    { agent: "superpowers.code-reviewer", task: "Review {previous}", context: "fresh" }
+    { agent: "worker", task: "Implement...", context: "fresh" },
+    { agent: "reviewer", task: "Review {previous}", context: "fresh" },
+    { agent: "reviewer", task: "Review {previous}", context: "fresh" }
   ]
 })
 ```
 
-## Agent names
+## Agent mapping
 
-Superpowers agents are registered under the `superpowers` package:
-
-| Skill references | Pi agent name |
-|-----------------|---------------|
-| `superpowers:code-reviewer` | `superpowers.code-reviewer` |
-| `superpowers:implementer` | `superpowers.implementer` |
-| `superpowers:spec-reviewer` | `superpowers.spec-reviewer` |
-| `superpowers:spec-document-reviewer` | `superpowers.spec-document-reviewer` |
-| `superpowers:plan-document-reviewer` | `superpowers.plan-document-reviewer` |
+| Skill references | Pi builtin agent |
+|-----------------|-----------------|
+| `implementer` | `worker` |
+| `code-reviewer` | `reviewer` |
+| `spec-reviewer` | `reviewer` |
+| `spec-document-reviewer` | `reviewer` |
+| `plan-document-reviewer` | `reviewer` |
+| `Explore` / `scout` | `scout` |
+| `planner` | `planner` |
+| `oracle` | `oracle` |
 
 ## Prompt templates
 
@@ -78,9 +79,9 @@ Skills like `subagent-driven-development` include local prompt templates (e.g., 
 // Read the template first
 const prompt = await read("skills/subagent-driven-development/implementer-prompt.md")
 
-// Use it as the task
+// Use it as the task with a builtin agent
 subagent({
-  agent: "superpowers.implementer",
+  agent: "worker",
   task: prompt + "\n\n[fill in template placeholders]",
   context: "fresh"
 })

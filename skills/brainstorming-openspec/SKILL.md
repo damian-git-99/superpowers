@@ -26,12 +26,13 @@ You MUST create a task for each of these items and complete them in order:
 1. **Explore project context** — check files, docs, recent commits, existing openspec specs
 2. **Offer visual companion** (if topic will involve visual questions) — its own message
 3. **Ask clarifying questions** — one at a time (use the `question` tool with predefined options when possible)
-4. **Propose 2-3 approaches** — with trade-offs and your recommendation
-5. **Present design** — in sections scaled to their complexity
-6. **Save design notes** to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-7. **Spec self-review** — check for placeholders, contradictions, ambiguity
-8. **User reviews written design** — ask user to review before proceeding
-9. **Transition to OpenSpec** — instruct user to create OpenSpec change
+4. **Research third-party dependencies** — if the design involves complex external libraries (payment SDKs, cloud APIs, auth providers, etc.), launch a sub-agent to investigate before proposing approaches. See section below.
+5. **Propose 2-3 approaches** — with trade-offs and your recommendation
+6. **Present design** — in sections scaled to their complexity
+7. **Save design notes** to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
+8. **Spec self-review** — check for placeholders, contradictions, ambiguity
+9. **User reviews written design** — ask user to review before proceeding
+10. **Transition to OpenSpec** — instruct user to create OpenSpec change
 
 ## Process Flow
 
@@ -39,6 +40,8 @@ You MUST create a task for each of these items and complete them in order:
 digraph brainstorming_openspec {
     "Explore project context" [shape=box];
     "Ask clarifying questions" [shape=box];
+    "Complex third-party deps?" [shape=diamond];
+    "Research dependencies" [shape=box];
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
@@ -48,7 +51,10 @@ digraph brainstorming_openspec {
     "User runs /opsx-ff\nor /opsx-propose" [shape=doublecircle];
 
     "Explore project context" -> "Ask clarifying questions";
-    "Ask clarifying questions" -> "Propose 2-3 approaches";
+    "Ask clarifying questions" -> "Complex third-party deps?";
+    "Complex third-party deps?" -> "Research dependencies" [label="yes"];
+    "Complex third-party deps?" -> "Propose 2-3 approaches" [label="no"];
+    "Research dependencies" -> "Propose 2-3 approaches";
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
@@ -72,6 +78,14 @@ digraph brainstorming_openspec {
 - For appropriately-scoped projects, ask questions one at a time
 - Use the `question` tool for multiple-choice questions (predefined options help the user answer quickly). The tool supports a custom "Other" option, so you never need to worry about missing an option.
 - Focus on understanding: purpose, constraints, success criteria
+
+**Research third-party dependencies:**
+
+- If the design involves complex external libraries (payment SDKs like Stripe, cloud APIs, auth providers, etc.), research them before proposing approaches
+- Launch a sub-agent to investigate using `context7`, official docs, or web search
+- Focus on: setup requirements, API surface, auth patterns, error handling, webhooks/callbacks, rate limits, official SDK patterns
+- Collect findings into a structured summary to reference when proposing approaches and in the design
+- For simple/well-known libraries (formatting, utility helpers), skip this step
 
 **Exploring approaches:**
 
@@ -119,6 +133,7 @@ After the user approves, instead of invoking writing-plans, tell them:
 - **One question at a time** - Don't overwhelm
 - **Use the `question` tool** - It supports predefined options (with a custom "Other" fallback), perfect for multiple-choice questions. Prefer this over asking open-ended questions in plain text.
 - **YAGNI ruthlessly** - Remove unnecessary features
+- **Research before proposing** - When complex third-party dependencies are involved, investigate before designing architecture
 - **Explore alternatives** - Always propose 2-3 approaches
 - **Incremental validation** - Present design, get approval before moving on
 

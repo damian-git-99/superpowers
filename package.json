@@ -7,7 +7,7 @@
   "type": "module",
   "main": ".opencode/plugins/superpowers.js",
   "pi": {
-    "skills": ["./skills"],
+    "skills": ["./pi/skills"],
     "extensions": ["./pi/extensions/register-agents.ts"]
   }
 }

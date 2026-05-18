@@ -3,14 +3,16 @@
 ## Installation
 
 ```bash
-pi install /path/to/superpowers/pi
+pi install /path/to/superpowers
 ```
 
-Or from GitHub (once published):
+Or from GitHub:
 
 ```bash
-pi install git:github.com/damian-git-99/superpowers/pi
+pi install git:github.com/damian-git-99/superpowers
 ```
+
+> ⚠️ **Note:** The package now lives at the repo root. The old path `/superpowers/pi` does not work because GitHub doesn't treat subdirectories as repos.
 
 ## Required Dependencies
 

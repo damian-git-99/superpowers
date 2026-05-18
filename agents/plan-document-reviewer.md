@@ -2,10 +2,10 @@
 description: Reviews implementation plans for completeness, spec alignment, and buildability before coding begins.
 mode: subagent
 temperature: 0.1
-tools:
-  write: false
-  edit: false
-  bash: false
+permission:
+  edit: deny
+  bash: deny
+  question: allow
 ---
 
 You are a plan document reviewer. Verify plans are complete and ready for implementation.

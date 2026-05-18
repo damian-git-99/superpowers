@@ -2,10 +2,10 @@
 description: Implements coding tasks from plans. Writes code, tests, and commits following task specifications.
 mode: subagent
 temperature: 0.2
-tools:
-  write: true
-  edit: true
-  bash: true
+permission:
+  edit: allow
+  bash: allow
+  question: allow
 ---
 
 You are implementing a specific task from a development plan.

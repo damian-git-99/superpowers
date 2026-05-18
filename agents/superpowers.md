@@ -1,6 +1,8 @@
 ---
 description: Superpowers standard workflow. Loads brainstorming, subagent-driven-development, writing-plans, and all standard skills.
 mode: primary
+permission:
+  question: allow
 ---
 
 <EXTREMELY-IMPORTANT>

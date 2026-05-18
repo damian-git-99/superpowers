@@ -94,8 +94,6 @@ export const SuperpowersPlugin = async ({ client, directory }) => {
       }
 
       // Register agents from agents/*.md into config.agent
-      // Only sets schema-safe properties to avoid validation errors.
-      // Tool/permission restrictions and models should be configured in opencode.json.
       config.agent = config.agent || {};
       try {
         const files = fs.readdirSync(superpowersAgentsDir);
@@ -121,6 +119,12 @@ export const SuperpowersPlugin = async ({ client, directory }) => {
               ? { steps: existing.steps }
               : frontmatter.steps !== undefined && { steps: frontmatter.steps }),
             ...(existing.color || (frontmatter.color && { color: frontmatter.color })),
+            ...((existing.tools || frontmatter.tools) && {
+              tools: { ...existing.tools, ...frontmatter.tools },
+            }),
+            ...((existing.permission || frontmatter.permission) && {
+              permission: { ...existing.permission, ...frontmatter.permission },
+            }),
             prompt: existing.prompt || body,
           };
         }

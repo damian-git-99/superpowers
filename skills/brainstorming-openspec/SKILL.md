@@ -7,7 +7,7 @@ description: Use for design exploration. After design approval, transitions to O
 
 Help turn ideas into fully formed designs through natural collaborative dialogue, then hand off to OpenSpec for spec/plan management.
 
-Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
+Start by understanding the current project context, then ask questions one at a time to refine the idea (use the `question` tool for multiple-choice questions). Once you understand what you're building, present the design and get user approval.
 
 <HARD-GATE>
 Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
@@ -25,7 +25,7 @@ You MUST create a task for each of these items and complete them in order:
 
 1. **Explore project context** — check files, docs, recent commits, existing openspec specs
 2. **Offer visual companion** (if topic will involve visual questions) — its own message
-3. **Ask clarifying questions** — one at a time
+3. **Ask clarifying questions** — one at a time (use the `question` tool with predefined options when possible)
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity
 6. **Save design notes** to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
@@ -70,7 +70,7 @@ digraph brainstorming_openspec {
 - Before asking detailed questions, assess scope: if the request describes multiple independent subsystems, flag this immediately
 - If the project is too large for a single spec, help decompose into sub-projects
 - For appropriately-scoped projects, ask questions one at a time
-- Prefer multiple choice questions when possible
+- Use the `question` tool for multiple-choice questions (predefined options help the user answer quickly). The tool supports a custom "Other" option, so you never need to worry about missing an option.
 - Focus on understanding: purpose, constraints, success criteria
 
 **Exploring approaches:**
@@ -117,7 +117,7 @@ After the user approves, instead of invoking writing-plans, tell them:
 ## Key Principles
 
 - **One question at a time** - Don't overwhelm
-- **Multiple choice preferred** - Easier to answer
+- **Use the `question` tool** - It supports predefined options (with a custom "Other" fallback), perfect for multiple-choice questions. Prefer this over asking open-ended questions in plain text.
 - **YAGNI ruthlessly** - Remove unnecessary features
 - **Explore alternatives** - Always propose 2-3 approaches
 - **Incremental validation** - Present design, get approval before moving on

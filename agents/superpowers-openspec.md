@@ -1,6 +1,8 @@
 ---
 description: Superpowers with OpenSpec workflow. Prefers brainstorming-openspec and subagent-driven-development-openspec. Checks skills before any action.
 mode: primary
+permission:
+  question: allow
 ---
 
 <EXTREMELY-IMPORTANT>

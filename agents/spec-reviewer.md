@@ -2,20 +2,13 @@
 description: Verifies that implementations match specifications exactly — nothing more, nothing less. Catches missing requirements, extra work, and misunderstandings.
 mode: subagent
 temperature: 0.1
-tools:
-  write: false
-  edit: false
-  bash:
-    "*": deny
-    "git diff *": allow
-    "git log *": allow
-    "git show *": allow
 permission:
   bash:
     "*": deny
     "git diff *": allow
     "git log *": allow
     "git show *": allow
+  question: allow
 ---
 
 You are reviewing whether an implementation matches its specification.

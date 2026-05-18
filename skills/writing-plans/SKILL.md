@@ -22,6 +22,8 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
 
+If the spec is for a single feature but the implementation will be large (5+ tasks), flag this early. You'll do a formal PR scope check in the self-review step and mark task boundaries.
+
 ## File Structure
 
 Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
@@ -167,19 +169,7 @@ Every step must contain the content an engineer needs. These are **plan failures
 - Exact commands with expected output
 - DRY, YAGNI, TDD, frequent commits
 
-## Self-Review
-
-After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
-
-**1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
-
-**2. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
-
-**3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
-
-If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
-
-## PR Scope Check (Optional but Recommended for Large Features)
+## PR Scope Check
 
 After the self-review, estimate the plan scope:
 
@@ -192,13 +182,33 @@ After the self-review, estimate the plan scope:
 
 > ⚠️ **Plan Scope Warning:** This plan has X tasks and modifies ~Y files with an estimated Z lines of changes.
 > 
-> **Consider splitting into multiple PRs for easier review:**
+> **Consider splitting into multiple PRs for easier review — each PR should be ~300-500 lines max:**
 > 1. First PR: Tasks 1 through N (smaller, faster to review)
 > 2. Second PR: Tasks N+1 through end (after first PR merges from main)
 > 
-> This keeps each PR reviewable (~300-500 lines) and avoids 3000-line PRs that no one wants to review.
+> I'll mark each task with its PR group so the scope is clear.
 
-**This is advisory — don't enforce.** The user decides whether to split. Just make the recommendation clearly so they can choose.
+**If the user agrees to split (or if you recommend it and they don't object), annotate every task with its PR group.** Use a `**PR:**` line at the top of each task:
+
+```markdown
+### Task 1: [Component Name]
+**PR:** 1/2 (Tasks 1-3)
+
+**Files:**
+- Create: `path/to/file.py`
+...
+```
+
+```markdown
+### Task 4: [Component Name]
+**PR:** 2/2 (Tasks 4-6)
+
+**Files:**
+- Create: `path/to/file.py`
+...
+```
+
+**This is advisory — don't enforce.** The user decides whether to split. Just make the recommendation clearly and annotate the tasks so they can see the boundaries.
 
 ## Execution Handoff
 

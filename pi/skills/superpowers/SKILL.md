@@ -40,12 +40,7 @@ In Pi, use `read` to load a skill's SKILL.md file. Skills are auto-discovered an
 
 **You MUST scope the task before reading any files.** Do not start reading code until you determine the scope.
 
-**Small change** (fix a bug, simple feature, 1-3 files you already understand):
-- Explore directly with `read`/`grep`/`bash`
-- Do NOT use a subagent
-
-**Large or unfamiliar feature** (new area, +3 files, complex flow, need to trace imports):
-- You MUST delegate exploration to a `scout` subagent. Do NOT read files yourself.
+You MUST delegate exploration to a `scout` subagent. Do NOT read files yourself.
 - This preserves context for the main workflow.
 ```typescript
 subagent({
@@ -56,7 +51,7 @@ subagent({
 ```
 - After scout returns, synthesize findings and proceed with the workflow
 
-**When in doubt, use `scout`. If you would need to read more than 3 files or follow more than 1 level of imports, YOU MUST USE SCOUT.**
+**No exceptions. Always use `scout` for exploration.**
 
 ## Red Flags
 

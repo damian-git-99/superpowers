@@ -122,7 +122,7 @@ digraph brainstorming_openspec {
 }
 ```
 
-**The terminal state is the user running `/opsx-ff <change-name>` or `/opsx-propose <change-name>`.**
+**The terminal state is the user running `/opsx-ff <change-name>` or `/opsx-propose <change-name>`.** Do NOT invoke writing-plans or any other superpowers skill after this.
 
 ## The Process
 
@@ -154,7 +154,65 @@ digraph brainstorming_openspec {
 
 ## After the Design
 
-Same as standard brainstorming-openspec: save design notes, self-review, user reviews, transition to OpenSpec.
+**Documentation:**
+
+- Save validated design notes to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
+- Commit the design document to git
+
+**Spec Format:**
+
+This is a spec — describe WHAT to build, not HOW. Implementation details belong in the plan, not here. Use these sections:
+
+```markdown
+## Purpose
+[One sentence: what problem this solves]
+
+## Architecture
+[2-3 sentences: overall approach, key decisions]
+
+## Components
+[What each component does and how it behaves. Describe behavior, not mechanics. No SDK method names or parameter details.]
+
+## Data Flow
+[How data moves through the system. Diagrams welcome.]
+
+## Error Handling
+[What errors to handle and expected behavior, not how to implement them.]
+
+## Testing Strategy
+[High-risk test cases, not file lists. Focus on risky behaviors: race conditions, idempotency, edge cases, integration boundaries.]
+
+## Assumptions & Open Questions
+[What are we assuming? What still needs to be decided? Surface before implementation begins.]
+
+## Out of Scope
+[What this spec intentionally does NOT cover.]
+```
+
+Every section must be present. Scale content to complexity — a simple feature might have one-liners.
+
+**Spec Self-Review:**
+
+After saving, look at it with fresh eyes:
+
+1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections?
+2. **Internal consistency:** Do any sections contradict each other?
+3. **Scope check:** Is this focused enough for a single OpenSpec change?
+4. **Ambiguity check:** Could any requirement be interpreted two different ways?
+
+**Transition to OpenSpec:**
+
+After the user approves, instead of invoking writing-plans, tell them:
+
+> "Design approved. Create the OpenSpec change to capture specs, design decisions, and tasks:
+>
+> - **`/opsx-ff <change-name>`** — Generate all artifacts at once (proposal, specs, design, tasks)
+> - **`/opsx-propose <change-name>`** — Same as ff
+> - **`/opsx-continue <change-name>`** — Step by step (one artifact at a time)
+>
+> Then use `subagent-driven-development-openspec` to implement the tasks.
+>
+> When implementation is complete, run `/opsx-archive <change-name>` to archive."
 
 ## Key Principles
 

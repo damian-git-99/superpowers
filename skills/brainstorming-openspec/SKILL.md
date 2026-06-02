@@ -105,6 +105,38 @@ digraph brainstorming_openspec {
 - Save validated design notes to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
 - Commit the design document to git
 
+**Spec Format:**
+
+This is a spec — describe WHAT to build, not HOW. Implementation details belong in the plan, not here. Use these sections:
+
+```markdown
+## Purpose
+[One sentence: what problem this solves]
+
+## Architecture
+[2-3 sentences: overall approach, key decisions]
+
+## Components
+[What each component does and how it behaves. Describe behavior, not mechanics. No SDK method names or parameter details.]
+
+## Data Flow
+[How data moves through the system. Diagrams welcome.]
+
+## Error Handling
+[What errors to handle and expected behavior, not how to implement them.]
+
+## Testing Strategy
+[High-risk test cases, not file lists. Focus on risky behaviors: race conditions, idempotency, edge cases, integration boundaries.]
+
+## Assumptions & Open Questions
+[What are we assuming? What still needs to be decided? Surface before implementation begins.]
+
+## Out of Scope
+[What this spec intentionally does NOT cover.]
+```
+
+Every section must be present. Scale content to complexity — a simple feature might have one-liners.
+
 **Spec Self-Review:**
 
 After saving, look at it with fresh eyes:

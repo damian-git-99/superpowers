@@ -160,9 +160,80 @@ digraph brainstorming {
 - Cover: architecture, components, data flow, error handling, testing
 - Be ready to go back and clarify if something doesn't make sense
 
+**Design for isolation and clarity:**
+
+- Break the system into smaller units that each have one clear purpose, communicate through well-defined interfaces, and can be understood and tested independently
+- For each unit, you should be able to answer: what does it do, how do you use it, and what does it depend on?
+- Can someone understand what a unit does without reading its internals? Can you change the internals without breaking consumers? If not, the boundaries need work.
+- Smaller, well-bounded units are also easier for you to work with - you reason better about code you can hold in context at once, and your edits are more reliable when files are focused. When a file grows large, that's often a signal that it's doing too much.
+
+**Working in existing codebases:**
+
+- Explore the current structure before proposing changes. Follow existing patterns.
+- Where existing code has problems that affect the work (e.g., a file that's grown too large, unclear boundaries, tangled responsibilities), include targeted improvements as part of the design - the way a good developer improves code they're working in.
+- Don't propose unrelated refactoring. Stay focused on what serves the current goal.
+
 ## After the Design
 
-Same as standard brainstorming: write design doc, self-review, user reviews, invoke writing-plans.
+**Documentation:**
+
+- Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
+  - (User preferences for spec location override this default)
+- Commit the design document to git
+
+**Spec Format:**
+
+This is a spec — describe WHAT to build, not HOW. Implementation details belong in the plan, not here. Use these sections:
+
+```markdown
+## Purpose
+[One sentence: what problem this solves]
+
+## Architecture
+[2-3 sentences: overall approach, key decisions]
+
+## Components
+[What each component does and how it behaves. Describe behavior, not mechanics. No SDK method names or parameter details.]
+
+## Data Flow
+[How data moves through the system. Diagrams welcome.]
+
+## Error Handling
+[What errors to handle and expected behavior, not how to implement them.]
+
+## Testing Strategy
+[High-risk test cases, not file lists. Focus on risky behaviors: race conditions, idempotency, edge cases, integration boundaries.]
+
+## Assumptions & Open Questions
+[What are we assuming? What still needs to be decided? Surface before implementation begins.]
+
+## Out of Scope
+[What this spec intentionally does NOT cover.]
+```
+
+Every section must be present. Scale content to complexity — a simple feature might have one-liners.
+
+**Spec Self-Review:**
+After writing the spec document, look at it with fresh eyes:
+
+1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
+2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
+3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
+4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
+
+Fix any issues inline. No need to re-review — just fix and move on.
+
+**User Review Gate:**
+After the spec review loop passes, ask the user to review the written spec before proceeding:
+
+> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
+
+Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
+
+**Implementation:**
+
+- Invoke the writing-plans skill to create a detailed implementation plan
+- Do NOT invoke any other skill. writing-plans is the next step.
 
 ## Key Principles
 

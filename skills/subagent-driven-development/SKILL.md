@@ -231,13 +231,45 @@ Done!
 - Review loops add iterations
 - But catches issues early (cheaper than debugging later)
 
+## Parallel Execution
+
+By default, tasks run **sequentially** — one implementer at a time, with full two-stage review before moving to the next task. This is the safe path and should remain the norm.
+
+You may run tasks in **parallel** only when ALL of the following are true:
+
+1. **The plan explicitly marks them as parallel** — each task has `**Parallel:** yes (with Task X)`
+2. **No shared files** — tasks read/write completely disjoint sets of files
+3. **No shared integration points** — tasks do not wire into the same module, API, or component
+4. **No shared state** — tasks do not depend on each other's side effects
+5. **Clear, unambiguous scope** — each task's boundaries are well understood
+6. **Low concurrency** — at most 2-3 tasks in parallel, not open-ended
+
+### How to execute parallel tasks
+
+When the plan marks tasks as parallel-safe:
+
+1. Read the full plan and identify all parallel groups
+2. For each parallel group, dispatch one implementer subagent per task **simultaneously**
+3. Each implementer works in isolation with its own fresh context
+4. Wait for ALL implementers in the group to complete
+5. Run spec compliance review on each result sequentially (do not parallelize reviews)
+6. Run code quality review on each result sequentially
+7. Only after ALL reviews pass, mark the parallel group complete and move on
+
+### What stays sequential
+
+- Tasks NOT marked as parallel in the plan
+- Any task that touches files another task touches
+- Review loops (spec compliance → code quality) must always be sequential per task
+- The first task in a plan that sets up shared contracts or infrastructure
+
 ## Red Flags
 
 **Never:**
 - Start implementation on main/master branch without explicit user consent
 - Skip reviews (spec compliance OR code quality)
 - Proceed with unfixed issues
-- Dispatch multiple implementation subagents in parallel (conflicts)
+- Dispatch multiple implementation subagents in parallel **unless the plan explicitly marks them as independent AND they meet all parallel safety criteria**
 - Make subagent read plan file (provide full text instead)
 - Skip scene-setting context (subagent needs to understand where task fits)
 - Ignore subagent questions (answer before letting them proceed)

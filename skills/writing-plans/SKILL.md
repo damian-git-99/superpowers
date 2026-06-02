@@ -35,14 +35,63 @@ Before defining tasks, map out which files will be created or modified and what 
 
 This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.
 
-## Bite-Sized Task Granularity
+## Task Sizing by Outcome
 
-**Each step is one action (2-5 minutes):**
-- "Write the failing test" - step
-- "Run it to make sure it fails" - step
-- "Implement the minimal code to make the test pass" - step
-- "Run the tests and make sure they pass" - step
-- "Commit" - step
+Size tasks by **verifiable outcome**, not by file count or micro-edit count. A task should represent one clear, complete result that can be tested and reviewed on its own.
+
+### Principles
+
+- A task may touch **multiple related files** when they all serve the same outcome
+- Steps describe **how to complete the task**, not force each tiny edit into its own task
+- One task = one primary goal + one main verification path + one coherent area of the codebase
+- Avoid splitting work purely because several files are involved
+
+### Examples of good task sizing
+
+**One task for a validation flow:**
+- Add validation logic to controller, update service layer, and add tests — all in one task because they implement one behavior
+
+**One task for a feature slice:**
+- Implement UI component, wire it to state, and add integration tests — all together because they only make sense as a unit
+
+**One task with multiple steps:**
+- Write failing test → implement minimal code → verify tests pass → commit — all supporting the same outcome
+
+### Examples of oversplitting to avoid
+
+**One task per file in the same feature slice:**
+- Task 1: Update controller
+- Task 2: Update service  
+- Task 3: Add tests
+
+These should be one task because they implement a single behavior.
+
+**Separating implementation from tests when they belong together:**
+- Task 1: Implement the feature
+- Task 2: Write tests for the feature
+
+If the tests only make sense with that implementation, keep them in one task.
+
+**Micro-steps as separate tasks:**
+- Task 1: Add import statement
+- Task 2: Add function signature
+- Task 3: Add function body
+
+These should be steps within one task, not separate tasks.
+
+### When to split vs. keep together
+
+**Keep as one task when:**
+- One primary goal
+- One main verification path
+- One coherent area of the codebase
+- Shared context and reasoning across the files involved
+
+**Split into multiple tasks when:**
+- Multiple distinct outcomes
+- Different system areas with weak coupling
+- Different verification strategies
+- One part can be completed and reviewed meaningfully without the others
 
 ## Plan Format Choice (Ask User First)
 
@@ -92,6 +141,56 @@ Before writing the plan, ask the user which format they prefer:
 
 ---
 ```
+
+## Task Dependencies and Parallel Execution
+
+After defining tasks, mark which ones can run in parallel and which must be sequential.
+
+### Default: Sequential
+
+By default, tasks run in order. Do not mark tasks as parallel unless they clearly meet ALL safety criteria.
+
+### Parallel Safety Criteria (ALL must be true)
+
+A set of tasks may be marked as parallel ONLY if:
+
+1. **No shared files** — tasks do not read or write the same files
+2. **No shared integration points** — tasks do not wire into the same module, API, or component
+3. **No shared state** — tasks do not depend on each other's side effects or output
+4. **Clear boundaries** — each task's scope is unambiguous and self-contained
+5. **Low uncertainty** — the implementation approach is well understood, not exploratory
+
+### Cases that MUST remain sequential
+
+- Tasks touching the same files
+- Tasks sharing the same integration point or wiring
+- Tasks with unclear boundaries or high uncertainty
+- Tasks that depend on earlier implementation details
+- The first task that sets up shared infrastructure or contracts
+
+### Marking parallel tasks in the plan
+
+Add a `**Depends on:**` and `**Parallel:**` line to each task:
+
+```markdown
+### Task 1: Authentication Controller
+**Depends on:** none
+**Parallel:** no
+
+### Task 2: User Profile API
+**Depends on:** none
+**Parallel:** yes (with Task 3)
+
+### Task 3: Settings API
+**Depends on:** none
+**Parallel:** yes (with Task 2)
+
+### Task 4: Frontend Integration
+**Depends on:** Task 2, Task 3
+**Parallel:** no
+```
+
+**Execution note for SSD:** The SSD skill reads these markers. It implements sequential tasks in order, and only runs parallel tasks when the plan explicitly marks them as independent.
 
 ## Task Structure
 

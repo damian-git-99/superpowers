@@ -113,7 +113,8 @@ Each **task group** (level-2 heading) is treated as one unit for subagent dispat
 
 **How to handle dependencies:**
 - If task group 3 depends on task group 2, implement them in order
-- If task groups are independent, implement sequentially but inform the user
+- If task groups are independent and NOT marked as parallel, implement sequentially
+- If task groups are marked as parallel in the plan AND meet all parallel safety criteria, you may dispatch them simultaneously (see Parallel Execution section below)
 - Each task group gets its own implementer subagent
 
 ## Task Group → Subagent Mapping
@@ -157,6 +158,38 @@ Implementer subagents report one of four statuses:
 
 **BLOCKED:** Assess the blocker, re-dispatch with a capable model, or escalate.
 
+## Parallel Execution
+
+By default, task groups run **sequentially** — one implementer at a time, with full two-stage review before moving to the next group. This is the safe path and should remain the norm.
+
+You may run task groups in **parallel** only when ALL of the following are true:
+
+1. **The plan explicitly marks them as parallel** — the tasks.md or design doc marks groups as parallel-safe
+2. **No shared files** — groups read/write completely disjoint sets of files
+3. **No shared integration points** — groups do not wire into the same module, API, or component
+4. **No shared state** — groups do not depend on each other's side effects
+5. **Clear, unambiguous scope** — each group's boundaries are well understood
+6. **Low concurrency** — at most 2-3 groups in parallel, not open-ended
+
+### How to execute parallel task groups
+
+When the plan marks task groups as parallel-safe:
+
+1. Read the full tasks.md and identify all parallel groups
+2. For each parallel group, dispatch one implementer subagent per group **simultaneously**
+3. Each implementer works in isolation with its own fresh context
+4. Wait for ALL implementers in the group to complete
+5. Run spec compliance review on each result sequentially (do not parallelize reviews)
+6. Run code quality review on each result sequentially
+7. Only after ALL reviews pass, mark the parallel groups complete and move on
+
+### What stays sequential
+
+- Groups NOT marked as parallel in the plan
+- Any group that touches files another group touches
+- Review loops (spec compliance → code quality) must always be sequential per group
+- The first group in a plan that sets up shared contracts or infrastructure
+
 ## Completion
 
 After all task groups are implemented and reviewed:
@@ -199,3 +232,4 @@ Uses the same templates as subagent-driven-development:
 - Move to next task group with unresolved issues
 - Archive the change yourself — let the user decide when to archive
 - Start implementation on main/master without explicit user consent
+- Dispatch multiple implementation subagents in parallel **unless the plan explicitly marks the task groups as independent AND they meet all parallel safety criteria**

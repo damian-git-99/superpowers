@@ -9,7 +9,15 @@ Help turn ideas into fully formed designs through structured questioning using t
 
 **Requires:** `@juicesharp/rpiv-ask-user-question` installed (`pi install npm:@juicesharp/rpiv-ask-user-question`). If not available, fall back to asking questions manually one at a time.
 
-**Prerequisite:** [OpenSpec CLI](https://openspec.dev) installed and initialized in the project (`openspec init`).
+**Prerequisite:** [OpenSpec CLI](https://openspec.dev) installed globally (`npm install -g @fission-ai/openspec@latest`).
+
+**Setup check:** Si no existe `openspec/` en la raíz del proyecto, pregunta al usuario:
+
+> "OpenSpec no está inicializado en este proyecto. ¿Quieres configurarlo?"
+> - **Sí, para Pi** → ejecuta `openspec init --tools pi`
+> - **No ahora** → continua con brainstorming normal (sin OpenSpec)
+
+Si el usuario acepta, ejecuta el comando y confirma que los slash commands (`/opsx-ff`, `/opsx-archive`, etc.) ya están disponibles.
 
 Start by understanding the current project context, then use `ask_user_question` to present structured clarifying questions. Once you understand what you're building, present the design and get user approval.
 
@@ -31,10 +39,8 @@ You MUST create a task for each of these items and complete them in order:
 4. **Research third-party dependencies** — if the design involves complex external libraries (payment SDKs, cloud APIs, auth providers, etc.), launch a sub-agent to investigate before proposing approaches. See section below.
 5. **Propose 2-3 approaches** — with trade-offs and your recommendation
 6. **Present design** — in sections scaled to their complexity
-7. **Save design notes** to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-8. **Spec self-review** — check for placeholders, contradictions, ambiguity
-9. **User reviews written design** — ask user to review before proceeding
-10. **Transition to OpenSpec** — instruct user to create OpenSpec change
+7. **Transition to OpenSpec** — instruct user to create OpenSpec change (`/opsx-ff <name>`)
+8. **Choose implementation approach** — after artifacts generated, ask user how to implement (subagent-driven-development-openspec, manual, or other)
 
 ## Asking Questions with `ask_user_question`
 
@@ -101,10 +107,8 @@ digraph brainstorming_openspec {
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
-    "Save design notes" [shape=box];
-    "Spec self-review\n(fix inline)" [shape=box];
-    "User reviews design?" [shape=diamond];
-    "User runs /opsx-ff\nor /opsx-propose" [shape=doublecircle];
+    "User runs /opsx-ff\nor /opsx-propose" [shape=box];
+    "Choose implementation\napproach" [shape=diamond];
 
     "Explore project context" -> "Ask clarifying questions\n(ask_user_question tool)";
     "Ask clarifying questions\n(ask_user_question tool)" -> "Complex third-party deps?";
@@ -114,15 +118,12 @@ digraph brainstorming_openspec {
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Save design notes" [label="yes"];
-    "Save design notes" -> "Spec self-review\n(fix inline)";
-    "Spec self-review\n(fix inline)" -> "User reviews design?";
-    "User reviews design?" -> "Save design notes" [label="changes requested"];
-    "User reviews design?" -> "User runs /opsx-ff\nor /opsx-propose" [label="approved"];
+    "User approves design?" -> "User runs /opsx-ff\nor /opsx-propose" [label="yes"];
+    "User runs /opsx-ff\nor /opsx-propose" -> "Choose implementation\napproach";
 }
 ```
 
-**The terminal state is the user running `/opsx-ff <change-name>` or `/opsx-propose <change-name>`.** Do NOT invoke writing-plans or any other superpowers skill after this.
+**After `/opsx-ff` generates the artifacts, ask the user how they want to implement.** Offer options: `subagent-driven-development-openspec`, manual implementation, or another approach.
 
 ## The Process
 
@@ -152,57 +153,9 @@ digraph brainstorming_openspec {
 - Scale each section to its complexity
 - Cover: architecture, components, data flow, error handling, testing
 
-## After the Design
+## Transition to OpenSpec
 
-**Documentation:**
-
-- Save validated design notes to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
-- Commit the design document to git
-
-**Spec Format:**
-
-This is a spec — describe WHAT to build, not HOW. Implementation details belong in the plan, not here. Use these sections:
-
-```markdown
-## Purpose
-[One sentence: what problem this solves]
-
-## Architecture
-[2-3 sentences: overall approach, key decisions]
-
-## Components
-[What each component does and how it behaves. Describe behavior, not mechanics. No SDK method names or parameter details.]
-
-## Data Flow
-[How data moves through the system. Diagrams welcome.]
-
-## Error Handling
-[What errors to handle and expected behavior, not how to implement them.]
-
-## Testing Strategy
-[High-risk test cases, not file lists. Focus on risky behaviors: race conditions, idempotency, edge cases, integration boundaries.]
-
-## Assumptions & Open Questions
-[What are we assuming? What still needs to be decided? Surface before implementation begins.]
-
-## Out of Scope
-[What this spec intentionally does NOT cover.]
-```
-
-Every section must be present. Scale content to complexity — a simple feature might have one-liners.
-
-**Spec Self-Review:**
-
-After saving, look at it with fresh eyes:
-
-1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections?
-2. **Internal consistency:** Do any sections contradict each other?
-3. **Scope check:** Is this focused enough for a single OpenSpec change?
-4. **Ambiguity check:** Could any requirement be interpreted two different ways?
-
-**Transition to OpenSpec:**
-
-After the user approves, instead of invoking writing-plans, tell them:
+After the user approves, tell them to create the OpenSpec change:
 
 > "Design approved. Create the OpenSpec change to capture specs, design decisions, and tasks:
 >
@@ -210,9 +163,9 @@ After the user approves, instead of invoking writing-plans, tell them:
 > - **`/opsx-propose <change-name>`** — Same as ff
 > - **`/opsx-continue <change-name>`** — Step by step (one artifact at a time)
 >
-> Then use `subagent-driven-development-openspec` to implement the tasks.
->
 > When implementation is complete, run `/opsx-archive <change-name>` to archive."
+
+After the user runs `/opsx-ff`, ask how they want to implement: `subagent-driven-development-openspec`, manually, or another approach.
 
 ## Key Principles
 

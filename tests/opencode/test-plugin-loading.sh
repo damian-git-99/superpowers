@@ -21,7 +21,7 @@ skill_count=$(find "$SUPERPOWERS_SKILLS_DIR" -name "SKILL.md" | wc -l)
 
 # 3. Verify critical skills exist
 echo "Test 3: Critical skills..."
-for skill in brainstorming using-superpowers subagent-driven-development test-driven-development systematic-debugging; do
+for skill in brainstorming subagent-driven-development test-driven-development systematic-debugging; do
     [ -f "$SUPERPOWERS_SKILLS_DIR/$skill/SKILL.md" ] && echo "  [PASS] $skill" || { echo "  [FAIL] $skill missing"; exit 1; }
 done
 

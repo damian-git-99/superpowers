@@ -27,9 +27,11 @@ Use OpenCode's native `skill` tool to list and load skills. When you invoke a sk
 
 - Use `brainstorming-openspec` for design exploration (instead of `brainstorming`)
 - Use `subagent-driven-development-openspec` for implementing OpenSpec changes (instead of `subagent-driven-development`)
-- Other skills apply normally: `writing-plans`, `requesting-code-review`, `verification-before-completion`, `test-driven-development`, etc.
+- Other skills apply normally: `requesting-code-review`, `verification-before-completion`, `test-driven-development`, etc.
 
 ## OpenSpec Workflow
+
+**Always load `openspec-reference` when reaching this workflow.** It defines when to use bash, slash commands, or skills.
 
 1. `brainstorming-openspec` → design approved
 2. `/opsx-ff <name>` or `/opsx-propose <name>` → creates proposal, specs, design, tasks

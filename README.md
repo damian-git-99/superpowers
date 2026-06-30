@@ -77,23 +77,23 @@ Models inherit from the parent agent by default. To assign specific models per a
 
 ## OpenSpec Integration
 
-This fork supports an alternative workflow using [OpenSpec](https://openspec.dev) for spec/plan management. Requires [OpenSpec CLI](https://openspec.dev) installed and initialized (`openspec init`) in your project.
+This fork supports an alternative workflow using [OpenSpec](https://openspec.dev) for spec/plan management. Requires [OpenSpec CLI](https://openspec.dev) installed globally (`npm install -g @fission-ai/openspec@latest`) and initialized (`openspec init --tools opencode`) in your project.
 
 **Flow:**
 
 ```
 1. brainstorming-openspec     → design approved
 2. /opsx-ff <change-name>     → creates proposal, specs, design, tasks
-3. subagent-driven-dev-openspec → implements tasks via subagents
+3. subagent-driven-development-openspec → implements tasks via subagents
 4. /opsx-archive <change-name> → archives completed change
 ```
 
-OpenSpec CLI generates the `/opsx-*` commands automatically. After install, run `openspec init` in your project to activate them.
+OpenSpec CLI generates the `/opsx-*` commands automatically. After install, run `openspec init --tools opencode` in your project to activate them.
 
-| Skill | Replaces | Purpose |
-|-------|----------|---------|
-| `brainstorming-openspec` | — | Design exploration, then hands off to OpenSpec |
-| `subagent-driven-development-openspec` | `/opsx-apply` | Implements tasks from `openspec/changes/<name>/tasks.md` |
+| Skill | Purpose |
+|-------|---------|
+| `brainstorming-openspec` | Design exploration, then hands off to OpenSpec |
+| `subagent-driven-development-openspec` | Implements tasks from `openspec/changes/<name>/tasks.md` |
 
 ## What's Inside
 
@@ -121,7 +121,6 @@ OpenSpec CLI generates the `/opsx-*` commands automatically. After install, run 
 
 **Meta**
 - **writing-skills** - Create new skills following best practices
-- **using-superpowers** - Introduction to the skills system
 
 ### Agents Library
 
@@ -135,7 +134,7 @@ OpenSpec CLI generates the `/opsx-*` commands automatically. After install, run 
 | `agents/superpowers.md` | Primary agent: standard workflow |
 | `agents/superpowers-openspec.md` | Primary agent: OpenSpec workflow |
 
-**Primary agents** (`superpowers`, `superpowers-openspec`) are designed to use with **Tab** to switch. They include the `using-superpowers` behavioral rules (1% skill check, red flags, priority). To activate them, copy to `~/.config/opencode/agents/`. The plugin auto-registers subagents only.
+**Primary agents** (`superpowers`, `superpowers-openspec`) are designed to use with **Tab** to switch. They include the behavioral rules (1% skill check, red flags, priority). To activate them, copy to `~/.config/opencode/agents/`. The plugin auto-registers subagents only.
 
 ## Philosophy
 

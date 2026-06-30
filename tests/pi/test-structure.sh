@@ -40,15 +40,14 @@ skill_count=$(find -L "$PI_PKG/skills" -name "SKILL.md" | wc -l)
 
 # 5. Critical pi-specific skills exist
 echo "Test 5: Critical pi skills..."
-for skill in superpowers superpowers-openspec using-superpowers brainstorming brainstorming-openspec \
+for skill in superpowers superpowers-openspec brainstorming brainstorming-openspec \
              subagent-driven-development dispatching-parallel-agents; do
     [ -f "$PI_PKG/skills/$skill/SKILL.md" ] && echo "  [PASS] $skill" || { echo "  [FAIL] $skill missing"; exit 1; }
 done
 
 # 6. Pi-specific skill references exist
 echo "Test 6: Pi references..."
-[ -f "$PI_PKG/skills/using-superpowers/references/pi-tools.md" ] && \
-    echo "  [PASS] pi-tools.md" || { echo "  [FAIL] pi-tools.md missing"; exit 1; }
+echo "  [PASS] pi references (skipped - using-superpowers removed)"
 
 # 7. Symlinks resolve correctly
 echo "Test 7: Symlinks..."

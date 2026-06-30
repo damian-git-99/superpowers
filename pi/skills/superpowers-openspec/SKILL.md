@@ -38,7 +38,7 @@ Requires [OpenSpec CLI](https://openspec.dev) installed and initialized in the p
 
 - Use `brainstorming-openspec` for design exploration (instead of `brainstorming`)
 - Use `subagent-driven-development-openspec` for implementing OpenSpec changes (instead of `subagent-driven-development`)
-- Other skills apply normally: `writing-plans`, `requesting-code-review`, `verification-before-completion`, `test-driven-development`, etc.
+- Other skills apply normally: `requesting-code-review`, `verification-before-completion`, `test-driven-development`, etc.
 
 ## The Rule
 

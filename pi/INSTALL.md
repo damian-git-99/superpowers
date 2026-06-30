@@ -26,13 +26,12 @@ pi install npm:@juicesharp/rpiv-ask-user-question
 
 ## What gets installed
 
-- **Skills** (18 total):
+- **Skills** (17 total):
   - `superpowers` / `superpowers-openspec` — activate the full workflow at session start
-  - `using-superpowers` — how to use skills (red flags, priority, skill flow)
   - `brainstorming`, `writing-plans`, `subagent-driven-development` — core workflow
   - `test-driven-development`, `systematic-debugging` — disciplined practices
   - `dispatching-parallel-agents`, `requesting-code-review`, `finishing-a-development-branch` — collaboration
-  - And more — all 16 original skills plus 2 new activator skills
+  - And more — all 15 original skills plus 2 new activator skills
 
 - **Subagents**: Uses pi-subagents builtin agents:
   - `worker` — implements tasks (equivalent to implementer)
